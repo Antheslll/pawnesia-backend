@@ -1,0 +1,17 @@
+// controllers/ — Tempat logika fungsi yang menangani request dari route.
+
+// routes/ — Tempat definisi endpoint REST API, misal GET/POST /users.
+
+// models/ — Struktur data / schema database (misal MongoDB, Sequelize).
+
+// middlewares/ — Middleware Express seperti auth, logging, error handler.
+
+// services/ — Tempat logika bisnis yang lebih kompleks, dipanggil controller.
+
+// utils/ — Fungsi pendukung umum (format tanggal, logger, dll).
+
+// config/ — Konfigurasi koneksi database, konfigurasi lainnya.
+
+// app.js — Inisialisasi express, middleware, dan route.
+
+// server.js — Menjalankan server di port tertentu.
