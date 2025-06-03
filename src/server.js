@@ -1,17 +1,19 @@
-// controllers/ — Tempat logika fungsi yang menangani request dari route.
+import express, { json } from "express";
+import dotenv from "dotenv";
+import authRoutes from "./routes/authRoutes.js";
+import generatedCustomerId from "./utils/generateCustomerId.js";
 
-// routes/ — Tempat definisi endpoint REST API, misal GET/POST /users.
+dotenv.config();
 
-// models/ — Struktur data / schema database (misal MongoDB, Sequelize).
+const app = express();
 
-// middlewares/ — Middleware Express seperti auth, logging, error handler.
+app.use(json());
 
-// services/ — Tempat logika bisnis yang lebih kompleks, dipanggil controller.
+//routes
 
-// utils/ — Fungsi pendukung umum (format tanggal, logger, dll).
+app.use("/auth", authRoutes);
 
-// config/ — Konfigurasi koneksi database, konfigurasi lainnya.
+console.log(await generatedCustomerId());
+const PORT = 5000;
 
-// app.js — Inisialisasi express, middleware, dan route.
-
-// server.js — Menjalankan server di port tertentu.
+app.listen(PORT, () => console.log(`Server berjalan di port ${PORT}`));
