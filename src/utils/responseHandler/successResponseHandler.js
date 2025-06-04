@@ -5,7 +5,7 @@ const sendSuccessResponse = (
   errors = []
 ) => {
   return res.status(statusCode).json({
-    status: "error",
+    status: "Success",
     message,
     errors,
   });

@@ -1,5 +1,5 @@
 import { body, validationResult } from "express-validator";
-import sendErrorResponse from "../utils/responseHandler/errorResponseHandler.js";
+import sendErrorResponse from "../../utils/responseHandler/errorResponseHandler.js";
 
 const registerValidation = [
   body("email").isEmail().withMessage("Email tidak valid").normalizeEmail(),
