@@ -25,3 +25,12 @@ Client --> Route --> Middleware(s) --> Controller --> Service --> Database
 
 
 jadi intinya itu middlewares kyk yang untuk ngebantu si controllers/ middlewares itu kyk helper bisa dipakai dimana aja, misal untuk ngedecode dan kasih json webtoken dll
+
+
+Rate Limiting: Tambahkan middleware express-rate-limit untuk endpoint login.
+
+Helmet: Gunakan helmet() untuk menambah layer keamanan HTTP headers.
+
+Logging: Gunakan morgan atau logger custom agar request bisa dilacak.
+
+Error Handler Global: Buat middleware errorHandler di akhir untuk tangani unhandled errors.

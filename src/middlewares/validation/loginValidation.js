@@ -14,7 +14,7 @@ const loginValidation = [
   (req, res, next) => {
     const err = validationResult(req);
     if (!err.isEmpty()) {
-      return sendErrorResponse(res, 400, "Validation Error", errors);
+      return sendErrorResponse(res, 400, "Validation Error", err);
     }
     next();
   },

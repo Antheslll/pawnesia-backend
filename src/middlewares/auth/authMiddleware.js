@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import sendErrorResponse from "../../utils/responseHandler/errorResponseHandler";
+import sendErrorResponse from "../../utils/responseHandler/errorResponseHandler.js";
 
 const authenticateUser = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -17,7 +17,7 @@ const authenticateUser = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
-    return sendErrorResponse(res, 401, "Invalid or expired token", err.array());
+    return sendErrorResponse(res, 401, "Invalid or expired token", err.message);
   }
 };
 

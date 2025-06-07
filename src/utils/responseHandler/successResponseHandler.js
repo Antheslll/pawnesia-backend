@@ -2,12 +2,12 @@ const sendSuccessResponse = (
   res,
   statusCode = 200,
   message = "OK",
-  errors = []
+  details = []
 ) => {
   return res.status(statusCode).json({
     status: "Success",
     message,
-    errors,
+    detail: details,
   });
 };
 
