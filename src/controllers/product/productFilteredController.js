@@ -8,13 +8,13 @@ const showProducts = async (req, res) => {
     const { category } = req.query;
 
     if (!category) {
-      sendErrorResponse(res, 400, "Cannot get Category", {
+      sendErrorResponse(res, 400, "Cannot get Product Category", {
         inputCategory: category,
       });
       return;
     }
 
-    if (["All", "Food", "Accessories", "Animals"].includes(category)) {
+    if (["All", "Food", "Accessories", "Animal"].includes(category)) {
       const showProducts = await getProductsByCategory(category, 5);
       sendDataResponse(
         res,

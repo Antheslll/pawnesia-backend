@@ -71,6 +71,7 @@ const customerLogin = async (req, res) => {
         userId: existingUser.user_id,
         email: existingUser.email,
         role: existingUser.role,
+        profile_url: existingUser.profile_picture,
       },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN || "30d" }
