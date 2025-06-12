@@ -35,6 +35,7 @@ const Comments = sequelize.define(
     rating: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 5,
     },
     comments: {
       type: DataTypes.TEXT,

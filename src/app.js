@@ -4,8 +4,8 @@ import authRoutes from "./routes/authRoutes.js";
 import userInfoRoutes from "./routes/userInfoRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
-import dotnenv from "dotenv";
-// import Users from "./models/user.js";
+import cloudUploadRoutes from "./routes/cloudUploadRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
 
 const app = express();
 
@@ -22,5 +22,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userInfoRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/comments", commentRoutes);
+app.use("/api/upload", cloudUploadRoutes);
+app.use("/api/cart", cartRoutes);
 
 export default app;
