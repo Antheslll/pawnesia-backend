@@ -1,16 +1,15 @@
-import { removeTicks } from "sequelize/lib/utils";
-import { CartItems } from "../../models/relation.js";
-import generatedCartItemId from "../../utils/generateCartItemId.js";
+import { CartItems, Products, Users } from "../../models/relation.js";
 import sendErrorResponse from "../../utils/responseHandler/errorResponseHandler.js";
 import sendDataResponse from "../../utils/responseHandler/sendDataResponse.js";
 import sendSuccessResponse from "../../utils/responseHandler/successResponseHandler.js";
+import { v4 as uuidv4 } from "uuid";
 
 const createNewItems = async (req, res) => {
   try {
     const { userId, productId, quantity } = req.body;
-    const createdTime = await req.cartItemAddedComplete.createdAt;
+    const createdTime = new Date();
 
-    if (!userId || !productId || !quantity || !createdTime) {
+    if (!userId || !productId || !quantity) {
       return sendErrorResponse(
         res,
         400,
@@ -19,34 +18,48 @@ const createNewItems = async (req, res) => {
           userId,
           productId,
           quantity,
-          createdTime,
         }
       );
     }
 
-    const newCartItemId = await generatedCartItemId();
-
-    await CartItems.create({
-      cart_item_id: newCartItemId,
-      user_id: userId,
-      product_id: productId,
-      quantity,
-      created_at: createdTime,
+    const cartItemExists = await CartItems.findOne({
+      where: { user_id: userId, product_id: productId },
     });
 
-    const dataItems = await CartItems.findOne({
-      where: { cart_item_id: newCartItemId },
-    });
+    if (cartItemExists) {
+      cartItemExists.quantity += 1;
+      await cartItemExists.save();
+      return sendSuccessResponse(
+        res,
+        200,
+        "Berhasil menambahkan Item ke keranjang",
+        { previousData: cartItemExists }
+      );
+    } else {
+      const newCartItemId = uuidv4();
 
-    return sendSuccessResponse(
-      res,
-      200,
-      "Berhasil menambahkan Item Ke keranjang",
-      dataItems
-    );
+      await CartItems.create({
+        cart_item_id: newCartItemId,
+        user_id: userId,
+        product_id: productId,
+        quantity,
+        created_at: createdTime,
+      });
+
+      const dataItems = await CartItems.findOne({
+        where: { cart_item_id: newCartItemId },
+      });
+
+      return sendSuccessResponse(
+        res,
+        200,
+        "Berhasil menambahkan Item Ke keranjang",
+        dataItems
+      );
+    }
   } catch (err) {
     console.error(err);
-    return sendErrorResponse(res, 500, "Server error", {
+    return sendErrorResponse(res, 500, "Server error woi", {
       message: err.message,
     });
   }
@@ -54,7 +67,7 @@ const createNewItems = async (req, res) => {
 
 const displayCartItems = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { userId } = req.params;
 
     if (!userId) {
       return sendErrorResponse(
@@ -68,7 +81,23 @@ const displayCartItems = async (req, res) => {
     }
 
     const userCartItems = await CartItems.findAll({
-      where: { user_id: userId },
+      include: [
+        {
+          model: Products,
+          attributes: [
+            "product_id",
+            "uuid",
+            "product_name",
+            "product_price",
+            "product_image",
+          ],
+        },
+        {
+          model: Users,
+          where: { user_id: userId },
+          attributes: [],
+        },
+      ],
     });
 
     if (userCartItems.length === 0) {

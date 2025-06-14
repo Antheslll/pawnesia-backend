@@ -1,8 +1,8 @@
-import { body, validationResult } from "express-validator";
+import { param, validationResult } from "express-validator";
 import sendErrorResponse from "../../utils/responseHandler/errorResponseHandler.js";
 
 const viewCartItems = [
-  body("userId")
+  param("userId")
     .matches(/^CU\d{3}$/)
     .withMessage("user_id harus memiliki format CUXXX"),
 

@@ -3,6 +3,7 @@ import Products from "../models/product.js";
 const getProductsByCategory = async (category, limitTop = 5) => {
   const commonAttributes = [
     "uuid",
+    "product_id",
     "product_image",
     "product_name",
     "product_price",

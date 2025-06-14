@@ -5,7 +5,7 @@ const Products = sequelize.define(
   "Product",
   {
     product_id: {
-      type: DataTypes.CHAR(5),
+      type: DataTypes.UUID,
       primaryKey: true,
       allowNull: false,
     },

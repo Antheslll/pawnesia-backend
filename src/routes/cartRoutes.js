@@ -11,8 +11,8 @@ import cartQuantityUpdate from "../middlewares/cart/cartQuantityUpdateMiddleware
 
 const router = express.Router();
 
-router.post("/create", createNewCartItems, createNewItems);
-router.get("/view", viewCartItems, displayCartItems);
+router.post("/create/", createNewCartItems, createNewItems);
+router.get("/view/:userId", viewCartItems, displayCartItems);
 router.delete("/delete/:id", cartItemsDelete);
 router.put(
   "/update/quantity/:itemId",

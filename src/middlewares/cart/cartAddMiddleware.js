@@ -24,11 +24,6 @@ const createNewCartItems = [
       );
     }
 
-    req.cartItemAddedComplete = {
-      body: req.body,
-      createdAt: new Date().toISOString(),
-    };
-
     next();
   },
 ];

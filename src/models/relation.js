@@ -1,7 +1,14 @@
 import sequelize from "../config/db.js";
 import CartItems from "./cartItems.js";
 import Comments from "./comment.js";
+import OrderDetail from "./orderDetails.js";
+import OrderDetailDraft from "./orderDetailsDraft.js";
+import OrderDraftItem from "./orderDraftItem.js";
+import Orders from "./orders.js";
+import OrdersDraft from "./ordersDraft.js";
 import Products from "./product.js";
+import ShippingAddress from "./shippingAddress.js";
+import ShippingAddressDraft from "./shippingAddressDraft.js";
 import Users from "./user.js";
 
 //Comments---Users
@@ -31,4 +38,72 @@ Products.hasMany(CartItems, {
   targetKey: "product_id",
 });
 
-export { sequelize, Users, Products, Comments, CartItems };
+//orders---order detail
+OrderDetail.belongsTo(Orders, {
+  foreignKey: "order_id",
+  targetKey: "order_id",
+});
+
+Orders.hasMany(OrderDetail, {
+  foreignKey: "order_id",
+  targetKey: "order_id",
+});
+
+//orders---shippingAddress
+Orders.hasOne(ShippingAddress, {
+  foreignKey: "order_id",
+  targetKey: "order_id",
+});
+
+//ordersdraft---order detail
+OrderDetailDraft.belongsTo(OrdersDraft, {
+  foreignKey: "order_id",
+  targetKey: "order_id",
+});
+
+OrdersDraft.hasMany(OrderDetailDraft, {
+  foreignKey: "order_id",
+  targetKey: "order_id",
+});
+
+//orders---shippingAddress
+OrdersDraft.hasOne(ShippingAddressDraft, {
+  foreignKey: "order_id",
+  targetKey: "order_id",
+});
+
+//orderDraftItem---orderDraft
+OrdersDraft.belongsTo(OrderDraftItem, {
+  foreignKey: "order_id",
+  targetKey: "order_id",
+});
+
+OrderDraftItem.hasMany(OrdersDraft, {
+  foreignKey: "order_id",
+  targetKey: "order_id",
+});
+
+//orderDraftItem---cartItem
+CartItems.belongsTo(OrderDraftItem, {
+  foreignKey: "cart_item_id",
+  targetKey: "cart_item_id",
+});
+
+OrderDraftItem.hasMany(CartItems, {
+  foreignKey: "cart_item_id",
+  targetKey: "cart_item_id",
+});
+
+export {
+  sequelize,
+  Users,
+  Products,
+  Comments,
+  CartItems,
+  OrderDetail,
+  Orders,
+  ShippingAddress,
+  OrdersDraft,
+  OrderDetailDraft,
+  ShippingAddressDraft,
+};
