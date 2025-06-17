@@ -2,9 +2,7 @@ import { param, validationResult } from "express-validator";
 import sendErrorResponse from "../../utils/responseHandler/errorResponseHandler.js";
 
 const viewCartItems = [
-  param("userId")
-    .matches(/^CU\d{3}$/)
-    .withMessage("user_id harus memiliki format CUXXX"),
+  param("userId").isUUID().withMessage("user_id harus merupakan UUID"),
 
   (req, res, next) => {
     const error = validationResult(req);

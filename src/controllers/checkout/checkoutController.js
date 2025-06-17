@@ -11,6 +11,7 @@ import {
   OrderDetail,
   CartItems,
   ShippingAddress,
+  Orders,
 } from "../../models/relation.js";
 
 const CreateNewDraft = async (req, res) => {
@@ -133,11 +134,16 @@ const checkoutFinalization = async (req, res) => {
     const { ordersDraftData, orderDetailDraftData, shippingAddressDraftData } =
       req.body;
 
+    if (!ordersDraftData.length || !shippingAddressDraftData.length) {
+      return sendErrorResponse(res, 400, "Data kosong", { field: "data" });
+    }
+
     if (
       !ordersDraftData ||
       !orderDetailDraftData ||
       !shippingAddressDraftData
     ) {
+      console.log("kena kau error");
       return sendErrorResponse(res, 400, "Data yang diminta tidak sesuai", {
         ordersDraftData,
         orderDetailDraftData,
@@ -146,12 +152,12 @@ const checkoutFinalization = async (req, res) => {
     }
 
     const totalPriceUpdated = orderDetailDraftData.reduce(
-      (prev, next) => prev.quantity * prev.amount + next.quantity * next.amount
+      (sum, item) => sum + item.quantity * item.amount,
+      0
     );
-
     await OrdersDraft.update(
       { total_price: totalPriceUpdated },
-      { where: { order_id: ordersDraftData.order_id } }
+      { where: { order_id: ordersDraftData[0].order_id } }
     );
 
     await Promise.all(
@@ -172,13 +178,13 @@ const checkoutFinalization = async (req, res) => {
 
     await ShippingAddressDraft.update(
       {
-        receiver_name: shippingAddressDraftData.receiver_name,
-        phone_number: shippingAddressDraftData.phone_number,
-        address: shippingAddressDraftData.address,
+        receiver_name: shippingAddressDraftData[0].receiver_name,
+        phone_number: shippingAddressDraftData[0].phone_number,
+        address: shippingAddressDraftData[0].address,
       },
       {
         where: {
-          shipping_address_id: shippingAddressDraftData.shipping_address_id,
+          shipping_address_id: shippingAddressDraftData[0].shipping_address_id,
         },
       }
     );
@@ -189,7 +195,10 @@ const checkoutFinalization = async (req, res) => {
     });
   } catch (err) {
     console.error("Error: ", err);
-    return sendErrorResponse(res, 400, "Something happen", err);
+    return sendErrorResponse(res, 400, "Something happen", {
+      err,
+      message: "kena di controller",
+    });
   }
 };
 
@@ -207,7 +216,6 @@ const proofingTransfer = async (req, res, next) => {
     await OrdersDraft.update(
       {
         proof_of_transfer: link,
-        status: pending,
       },
       { where: { order_id: orderId } }
     );
@@ -279,11 +287,14 @@ const draftToRealOrder = async (req, res) => {
         { transaction: t }
       );
 
-      await OrdersDraft.destroy({ where: { order_id: orderId } });
       await OrderDetailDraft.destroy({ where: { order_id: orderId } });
       await ShippingAddressDraft.destroy({ where: { order_id: orderId } });
       await CartItems.destroy({ where: { cart_item_id: destroyCartId } });
       await OrderDraftItem.destroy({ where: { cart_item_id: destroyCartId } });
+      await OrdersDraft.destroy({ where: { order_id: orderId } });
+      return sendSuccessResponse(res, 200, "Success Making Order", {
+        message: "horee!!",
+      });
     });
   } catch (err) {
     console.error("Error: ", err);

@@ -2,12 +2,8 @@ import { validationResult, body } from "express-validator";
 import sendErrorResponse from "../../utils/responseHandler/errorResponseHandler.js";
 
 const createNewCartItems = [
-  body("userId")
-    .matches(/^CU\d{3}$/)
-    .withMessage("user_id harus memiliki format CUXXX"),
-  body("productId")
-    .matches(/^PR\d{3}$/)
-    .withMessage("product_id harus memiliki format PRXXX"),
+  body("userId").isUUID().withMessage("user_id harus merupakan UUID"),
+  body("productId").isUUID().withMessage("product_id harus merupakan UUID"),
   body("quantity")
     .isNumeric({ min: 1 })
     .withMessage("quantity minimal harus satu"),

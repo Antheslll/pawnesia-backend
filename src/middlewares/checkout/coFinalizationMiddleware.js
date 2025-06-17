@@ -6,10 +6,10 @@ const finalizeCheckout = [
     .isArray()
     .withMessage("ordersDraftData must be Array"),
   body("orderDetailDraftData")
-    .isArray()
+    .notEmpty()
     .withMessage("orderDetailDraftData must be Array"),
   body("shippingAddressDraftData")
-    .isArray()
+    .notEmpty()
     .withMessage("shippingAddressDraftData must be Array"),
 
   (req, res, next) => {
@@ -20,7 +20,7 @@ const finalizeCheckout = [
         res,
         400,
         "Cannot finalize the checkout because the data request",
-        error
+        { error, message: "kenaa di middleware" }
       );
     }
 

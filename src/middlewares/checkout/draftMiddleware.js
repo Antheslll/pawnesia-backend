@@ -2,13 +2,13 @@ import { validationResult, body } from "express-validator";
 import sendErrorResponse from "../../utils/responseHandler/errorResponseHandler.js";
 
 const createDraft = [
-  body("userId").notEmpty().withMessage("user_id harus memiliki format CUXXX"),
+  body("userId").notEmpty().withMessage("user_id harus merupakan UUID"),
   body("cartItemId").isArray().withMessage("cartItemId harus berupa array"),
 
   body("productData").isArray().withMessage("productData harus berupa array"),
   body("productData.*.product_id")
-    .notEmpty()
-    .withMessage("product_id harus memiliki format PRXXX"),
+    .isUUID()
+    .withMessage("product_id harus merupakan UUID"),
   body("productData.*.quantity")
     .isNumeric({ min: 1 })
     .withMessage("quantity minimal harus satu"),

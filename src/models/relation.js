@@ -11,87 +11,71 @@ import ShippingAddress from "./shippingAddress.js";
 import ShippingAddressDraft from "./shippingAddressDraft.js";
 import Users from "./user.js";
 
-//Comments---Users
-Comments.belongsTo(Users, { foreignKey: "user_id", targetKey: "user_id" });
-Users.hasMany(Comments, { foreignKey: "user_id", targetKey: "user_id" });
+// Comments <-> Users
+Comments.belongsTo(Users, { foreignKey: "user_id" });
+Users.hasMany(Comments, { foreignKey: "user_id" });
 
-//Commments---Products
-Comments.belongsTo(Products, {
-  foreignKey: "product_id",
-  targetKey: "product_id",
-});
-Products.hasMany(Comments, {
-  foreignKey: "product_id",
-  sourceKey: "product_id",
-});
+// Comments <-> Products
+Comments.belongsTo(Products, { foreignKey: "product_id" });
+Products.hasMany(Comments, { foreignKey: "product_id" });
 
-//CartItems---Users
-CartItems.belongsTo(Users, { foreignKey: "user_id", targetKey: "user_id" });
-Users.hasMany(CartItems, { foreignKey: "user_id", targetKey: "user_id" });
+// CartItems <-> Users
+CartItems.belongsTo(Users, { foreignKey: "user_id" });
+Users.hasMany(CartItems, { foreignKey: "user_id" });
 
-CartItems.belongsTo(Products, {
-  foreignKey: "product_id",
-  targetKey: "product_id",
-});
-Products.hasMany(CartItems, {
-  foreignKey: "product_id",
-  targetKey: "product_id",
-});
+// CartItems <-> Products
+CartItems.belongsTo(Products, { foreignKey: "product_id" });
+Products.hasMany(CartItems, { foreignKey: "product_id" });
 
-//orders---order detail
-OrderDetail.belongsTo(Orders, {
+// Orders <-> OrderDetail
+OrderDetail.belongsTo(Orders, { foreignKey: "order_id", onDelete: "CASCADE" });
+Orders.hasMany(OrderDetail, { foreignKey: "order_id", onDelete: "CASCADE" });
+
+// Orders <-> ShippingAddress
+ShippingAddress.belongsTo(Orders, {
   foreignKey: "order_id",
-  targetKey: "order_id",
+  onDelete: "CASCADE",
 });
+Orders.hasOne(ShippingAddress, { foreignKey: "order_id", onDelete: "CASCADE" });
 
-Orders.hasMany(OrderDetail, {
-  foreignKey: "order_id",
-  targetKey: "order_id",
-});
-
-//orders---shippingAddress
-Orders.hasOne(ShippingAddress, {
-  foreignKey: "order_id",
-  targetKey: "order_id",
-});
-
-//ordersdraft---order detail
+// OrdersDraft <-> OrderDetailDraft
 OrderDetailDraft.belongsTo(OrdersDraft, {
   foreignKey: "order_id",
-  targetKey: "order_id",
+  onDelete: "CASCADE",
 });
-
 OrdersDraft.hasMany(OrderDetailDraft, {
   foreignKey: "order_id",
-  targetKey: "order_id",
+  onDelete: "CASCADE",
 });
 
-//orders---shippingAddress
+// OrdersDraft <-> ShippingAddressDraft
+ShippingAddressDraft.belongsTo(OrdersDraft, {
+  foreignKey: "order_id",
+  onDelete: "CASCADE",
+});
 OrdersDraft.hasOne(ShippingAddressDraft, {
   foreignKey: "order_id",
-  targetKey: "order_id",
+  onDelete: "CASCADE",
 });
 
-//orderDraftItem---orderDraft
-OrdersDraft.belongsTo(OrderDraftItem, {
+// OrdersDraft <-> OrderDraftItem (FIXED: arah relasi yang benar)
+OrderDraftItem.belongsTo(OrdersDraft, {
   foreignKey: "order_id",
-  targetKey: "order_id",
+  onDelete: "CASCADE",
 });
-
-OrderDraftItem.hasMany(OrdersDraft, {
+OrdersDraft.hasMany(OrderDraftItem, {
   foreignKey: "order_id",
-  targetKey: "order_id",
+  onDelete: "CASCADE",
 });
 
-//orderDraftItem---cartItem
+// OrderDraftItem <-> CartItems
 CartItems.belongsTo(OrderDraftItem, {
   foreignKey: "cart_item_id",
-  targetKey: "cart_item_id",
+  onDelete: "CASCADE",
 });
-
 OrderDraftItem.hasMany(CartItems, {
   foreignKey: "cart_item_id",
-  targetKey: "cart_item_id",
+  onDelete: "CASCADE",
 });
 
 export {
@@ -106,4 +90,5 @@ export {
   OrdersDraft,
   OrderDetailDraft,
   ShippingAddressDraft,
+  OrderDraftItem,
 };
