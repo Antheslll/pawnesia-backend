@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import sendErrorResponse from "../../utils/responseHandler/errorResponseHandler.js";
 import sendSuccessResponse from "../../utils/responseHandler/successResponseHandler.js";
 import Users from "../../models/user.js";
-import generateCustomerId from "../../utils/generateCustomerId.js";
+import { UUIDV4 } from "sequelize";
 
 const customerRegister = async (req, res) => {
   try {
@@ -21,8 +21,10 @@ const customerRegister = async (req, res) => {
 
     const passwordHashing = await hash(password, 10);
 
+    const idUser = UUIDV4();
+
     await Users.create({
-      user_id: await generateCustomerId(),
+      user_id: idUser,
       first_name: firstName,
       last_name: lastName,
       email: email,
@@ -58,6 +60,9 @@ const customerLogin = async (req, res) => {
         },
       ]);
     }
+
+    console.log("existing user loh ini: ", existingUser);
+
     const isPasswordMatch = await compare(password, existingUser.password);
 
     if (!isPasswordMatch) {

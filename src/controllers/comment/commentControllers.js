@@ -2,8 +2,8 @@ import { Comments, Users } from "../../models/relation.js";
 import sendErrorResponse from "../../utils/responseHandler/errorResponseHandler.js";
 import sendDataResponse from "../../utils/responseHandler/sendDataResponse.js";
 import { Products } from "../../models/relation.js";
-import { generatedCommentsId } from "../../utils/generateCommentsId.js";
 import sendSuccessResponse from "../../utils/responseHandler/successResponseHandler.js";
+import { UUIDV4 } from "sequelize";
 
 const getComment = async (req, res) => {
   try {
@@ -53,8 +53,10 @@ const createComment = async (req, res) => {
       });
     }
 
+    const newCommentId = UUIDV4();
+
     await Comments.create({
-      comment_id: await generatedCommentsId(),
+      comment_id: newCommentId,
       user_id: userId,
       product_id: productId,
       comments: comment,
