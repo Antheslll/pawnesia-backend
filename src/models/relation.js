@@ -78,6 +78,10 @@ OrderDraftItem.hasMany(CartItems, {
   onDelete: "CASCADE",
 });
 
+// OrderDetail <-> Products
+OrderDetail.belongsTo(Products, { foreignKey: "product_id" });
+Products.hasMany(OrderDetail, { foreignKey: "product_id" });
+
 export {
   sequelize,
   Users,

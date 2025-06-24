@@ -29,7 +29,13 @@ const Orders = sequelize.define(
       allowNull: true,
     },
     stat: {
-      type: DataTypes.ENUM("PENDING", "PACKAGES", "DELIVER", "RECEIVED"),
+      type: DataTypes.ENUM(
+        "PENDING",
+        "PACKAGES",
+        "DELIVER",
+        "CONFIRMATION",
+        "RECEIVED"
+      ),
       allowNull: false,
     },
     proof_of_transfer: {

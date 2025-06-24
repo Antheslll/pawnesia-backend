@@ -8,7 +8,7 @@ const getProductCategories = [
     .isAlpha()
     .withMessage("Category harus dalam bentuk alfabet"),
 
-  (res, req, next) => {
+  (req, res, next) => {
     const error = validationResult(req);
     if (!error.isEmpty()) {
       return sendErrorResponse(res, 400, "Category Unknown", error);

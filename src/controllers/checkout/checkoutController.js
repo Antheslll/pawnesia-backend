@@ -248,13 +248,17 @@ const draftToRealOrder = async (req, res) => {
 
     const finalOrderId = uuidv4();
 
+    const orderTime = new Date();
+    const estimateArrival = new Date(orderTime);
+    estimateArrival.setDate(orderTime.getDate() + 4);
+
     await sequelize.transaction(async (t) => {
       await Orders.create(
         {
           order_id: finalOrderId,
           user_id: orderDraftData.user_id,
-          order_time: new Date(),
-          estimate_arrival: null,
+          order_time: orderTime,
+          estimate_arrival: estimateArrival,
           stat: "PENDING",
           proof_of_transfer: orderDraftData.proof_of_transfer,
           total_price: orderDraftData.total_price,
@@ -302,9 +306,146 @@ const draftToRealOrder = async (req, res) => {
   }
 };
 
+const approveOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      sendErrorResponse(res, 400, "No ID", { the_params: req.params });
+      return;
+    }
+
+    const [updateOrder] = await Orders.update(
+      {
+        stat: "PACKAGE",
+      },
+      { where: { order_id: id } }
+    );
+
+    if (updateOrder === 0) {
+      return sendErrorResponse(
+        res,
+        404,
+        "comment tidak ditemukan atau tidak diubah",
+        { product_id: id }
+      );
+    }
+
+    return sendSuccessResponse(res, 200, "Berhasil mengedit comment", {
+      status_pengeditan: updateOrder,
+    });
+  } catch (err) {
+    console.error("Error: ", err);
+    return err;
+  }
+};
+const deliverOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      sendErrorResponse(res, 400, "No ID", { the_params: req.params });
+      return;
+    }
+
+    const [updateOrder] = await Orders.update(
+      {
+        stat: "DELIVER",
+      },
+      { where: { order_id: id } }
+    );
+
+    if (updateOrder === 0) {
+      return sendErrorResponse(
+        res,
+        404,
+        "comment tidak ditemukan atau tidak diubah",
+        { product_id: id }
+      );
+    }
+
+    return sendSuccessResponse(res, 200, "Berhasil mengedit comment", {
+      status_pengeditan: updateOrder,
+    });
+  } catch (err) {
+    console.error("Error: ", err);
+    return err;
+  }
+};
+const confirmOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      sendErrorResponse(res, 400, "No ID", { the_params: req.params });
+      return;
+    }
+
+    const [updateOrder] = await Orders.update(
+      {
+        stat: "CONFIRMATION",
+      },
+      { where: { order_id: id } }
+    );
+
+    if (updateOrder === 0) {
+      return sendErrorResponse(
+        res,
+        404,
+        "comment tidak ditemukan atau tidak diubah",
+        { product_id: id }
+      );
+    }
+
+    return sendSuccessResponse(res, 200, "Berhasil mengedit comment", {
+      status_pengeditan: updateOrder,
+    });
+  } catch (err) {
+    console.error("Error: ", err);
+    return err;
+  }
+};
+const receivedOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      sendErrorResponse(res, 400, "No ID", { the_params: req.params });
+      return;
+    }
+
+    const [updateOrder] = await Orders.update(
+      {
+        stat: "RECEIVED",
+      },
+      { where: { order_id: id } }
+    );
+
+    if (updateOrder === 0) {
+      return sendErrorResponse(
+        res,
+        404,
+        "comment tidak ditemukan atau tidak diubah",
+        { product_id: id }
+      );
+    }
+
+    return sendSuccessResponse(res, 200, "Berhasil mengedit comment", {
+      status_pengeditan: updateOrder,
+    });
+  } catch (err) {
+    console.error("Error: ", err);
+    return err;
+  }
+};
+
 export {
   CreateNewDraft,
   checkoutFinalization,
   proofingTransfer,
   draftToRealOrder,
+  approveOrder,
+  deliverOrder,
+  confirmOrder,
+  receivedOrder,
 };

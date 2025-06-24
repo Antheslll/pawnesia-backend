@@ -4,6 +4,7 @@ import sendSuccessResponse from "../../utils/responseHandler/successResponseHand
 import Users from "../../models/user.js";
 import Orders from "../../models/orders.js";
 import OrderDetail from "../../models/orderDetails.js";
+import Products from "../../models/product.js";
 const profileController = async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
@@ -37,7 +38,7 @@ const editProfile = async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
 
-    const { firstName, lastName, password, phoneNumber, address } = req.body;
+    const { firstName, lastName, phoneNumber, address } = req.body;
 
     if (!authHeader)
       return sendErrorResponse(res, 400, "Token not Provide", { authHeader });
@@ -63,7 +64,6 @@ const editProfile = async (req, res) => {
         {
           first_name: firstName,
           last_name: lastName,
-          password,
           phone_number: phoneNumber,
           address,
         },
@@ -120,6 +120,7 @@ const showOrder = async (req, res) => {
         include: [
           {
             model: OrderDetail,
+            include: [{ model: Products }],
           },
         ],
       });
@@ -128,6 +129,7 @@ const showOrder = async (req, res) => {
         include: [
           {
             model: OrderDetail,
+            include: [{ model: Products }],
           },
         ],
       });
@@ -136,6 +138,7 @@ const showOrder = async (req, res) => {
         include: [
           {
             model: OrderDetail,
+            include: [{ model: Products }],
           },
         ],
       });
@@ -144,6 +147,16 @@ const showOrder = async (req, res) => {
         include: [
           {
             model: OrderDetail,
+            include: [{ model: Products }],
+          },
+        ],
+      });
+      const orderDataConfirmation = await Orders.findAll({
+        where: { user_id: userIdToken, stat: "CONFIRMATION" },
+        include: [
+          {
+            model: OrderDetail,
+            include: [{ model: Products }],
           },
         ],
       });
@@ -152,6 +165,7 @@ const showOrder = async (req, res) => {
         orderDataPending,
         orderDataPackages,
         orderDataDeliver,
+        orderDataConfirmation,
         orderDataReceived,
       });
     }

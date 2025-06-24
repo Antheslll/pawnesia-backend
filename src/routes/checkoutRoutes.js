@@ -1,19 +1,28 @@
 import express from "express";
 import createDraft from "../middlewares/checkout/draftMiddleware.js";
 import {
+  approveOrder,
   checkoutFinalization,
+  confirmOrder,
   CreateNewDraft,
+  deliverOrder,
   draftToRealOrder,
   proofingTransfer,
+  receivedOrder,
 } from "../controllers/checkout/checkoutController.js";
 import finalizeCheckout from "../middlewares/checkout/coFinalizationMiddleware.js";
 import proofReq from "../middlewares/checkout/proofMiddleware.js";
+import getOrderId from "../middlewares/checkout/getOrderId.js";
 
 const router = express.Router();
 
 router.post("/draft", createDraft, CreateNewDraft);
 router.post("/finalize", finalizeCheckout, checkoutFinalization);
 router.post("/proof", proofReq, proofingTransfer, draftToRealOrder);
+router.put("/approve/:id", getOrderId, approveOrder);
+router.put("/delivered/:id", getOrderId, deliverOrder);
+router.put("/confirm/:id", getOrderId, confirmOrder);
+router.put("/received/:id", getOrderId, receivedOrder);
 export default router;
 
 // {

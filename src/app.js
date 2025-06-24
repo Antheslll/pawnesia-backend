@@ -8,6 +8,8 @@ import cloudUploadRoutes from "./routes/cloudUploadRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import checkoutRoutes from "./routes/checkoutRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
+import passwordRoutes from "./passwordTest.js";
+import orderRoutes from "./routes/orderRoutes.js";
 
 const app = express();
 
@@ -32,4 +34,6 @@ app.use("/api/upload", cloudUploadRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/checkout", checkoutRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/order", orderRoutes);
+app.use("/api/test", passwordRoutes);
 export default app;

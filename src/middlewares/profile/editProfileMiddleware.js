@@ -18,13 +18,6 @@ const editProfileMiddleware = [
     .isLength({ min: 3, max: 20 })
     .isAlpha()
     .withMessage("Nama belakang harus dalam 3-20 character dengan huruf semua"),
-  body("password")
-    .isLength({ min: 6 })
-    .withMessage("Password minimal 6 karakter")
-    .matches(/[A-Z]/)
-    .withMessage("Password harus mengandung minimal 1 huruf besar")
-    .matches(/[\W_]/)
-    .withMessage("Pasword harus mengandung minimal 1 simbol"),
   body("phoneNumber")
     .notEmpty()
     .matches(/^\+?[0-9\s\-()]{7,15}$/)
